@@ -1,7 +1,6 @@
 import { sum, map, filter, uniqBy, reject } from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 import axiosClient from "../../helpers/axiosClient";
-import axios from "axios";
 
 const initialState = {
   isLoading: false,
