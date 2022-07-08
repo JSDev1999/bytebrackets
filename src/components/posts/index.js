@@ -22,7 +22,7 @@ export default function Posts() {
       {isLoading && <LoadingScreen />}
       {!isLoading && getLocalUser && (
         <Typography component="h1" variant="h5">
-          {getLocalUser?.firstName} {getLocalUser?.lastName}
+          user Name: {getLocalUser?.firstName} {getLocalUser?.lastName}
         </Typography>
       )}
       <Button onClick={handleLogout}>logout</Button>
