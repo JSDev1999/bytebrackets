@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = "http://localhost:8088/api/v1/";
 const DEFAULT_HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",
@@ -27,3 +27,5 @@ axiosClient.interceptors.response.use(
 );
 
 export default axiosClient;
+
+export { token };

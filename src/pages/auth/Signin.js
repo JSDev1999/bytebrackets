@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -13,6 +13,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
+import { userLogin } from "src/app/slices/user";
+import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 
 function Copyright(props) {
   return (
@@ -33,6 +36,17 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const checkRes = (res) => {
+    if (res?.status === 200) {
+      navigate("/app");
+      enqueueSnackbar("Login Success!", { variant: "success" });
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -50,7 +64,7 @@ export default function SignIn() {
     }),
     onSubmit: (values, { resetForm }) => {
       console.log(values);
-      // dispatch(userLogin(values, checkRes));
+      dispatch(userLogin(values, checkRes));
     },
   });
 

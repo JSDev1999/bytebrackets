@@ -3,8 +3,9 @@ import axiosClient from "../../helpers/axiosClient";
 
 const initialState = {
   isLoading: false,
-  loggedUser: "",
-  isUserLoggedIn: false,
+  loggedUser: JSON.parse(window.localStorage.getItem("user")) ?? "",
+  isUserLoggedIn: JSON.parse(window.localStorage.getItem("user")) ?? false,
+  userData: {},
   error: false,
   posts: [],
   post: null,
@@ -65,7 +66,14 @@ const slice = createSlice({
     // login user
     loginUserSuccess(state, action) {
       state.loggedUser = action.payload;
+      state.isUserLoggedIn = action.payload?._id;
       state.isLoading = false;
+    },
+
+    // GET user data
+    getUserDataSuccess(state, action) {
+      state.isLoading = false;
+      state.userData = action.payload;
     },
   },
 });
@@ -152,7 +160,9 @@ export function userLogin(payload, checkRes) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axiosClient.post("/auth", payload);
+      const response = await axiosClient.post("user/loginuser", payload);
+      console.log(response.data);
+      window.localStorage.setItem("user", JSON.stringify(response.data.data));
       dispatch(slice.actions.loginUserSuccess(response.data.data));
       checkRes(response);
     } catch (error) {
@@ -165,9 +175,22 @@ export function userRegister(payload, checkRes) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axiosClient.post("auth/register", payload);
+      const response = await axiosClient.post("user/register", payload);
       // dispatch(slice.actions.loginUserSuccess(response.data));
       checkRes(response);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+//
+export function getUserData(payload) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axiosClient.post("user/register", payload);
+      dispatch(slice.actions.getUserDataSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
